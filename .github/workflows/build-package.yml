@@ -11,10 +11,10 @@ jobs:
   build:
     name: ${{ matrix.arch }} build
     runs-on: ubuntu-latest
-    timeout-minutes: 360  # Explicitly set max timeout to prevent early cancellation
+    timeout-minutes: 360
     strategy:
       matrix:
-        arch: [ x86-64 ]  # Use correct OpenWrt target format (hyphen instead of underscore)
+        arch: [ x86_64 ]  # Correct OpenWrt SDK arch
     steps:
       - uses: actions/checkout@v4
         with:
@@ -23,16 +23,21 @@ jobs:
       - name: Build Package
         uses: openwrt/gh-action-sdk@v5
         env:
-          ARCH: ${{ matrix.arch }}-23.05.4  # Use a valid stable version tag (e.g., 23.05.4); change to SNAPSHOT for latest or v24.10.0 if available
-          CONTAINER: openwrt/sdk  # Set to default; do not include arch/version here
+          ARCH: ${{ matrix.arch }}-23.05.4
+          CONTAINER: openwrt/sdk
           FEEDNAME: custom
           PACKAGES: luci-app-customtunnel
           EXTRA_FEEDS: "custom | ${{ github.workspace }}/applications"
-          BUILD_LOG: 1  # Enable detailed build logs for debugging
-          IGNORE_ERRORS: 1  # Continue on minor errors to avoid abrupt cancellations
+          BUILD_LOG: 1
+          IGNORE_ERRORS: 1
 
       - name: Store packages
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.arch }}-packages
           path: bin/packages/${{ matrix.arch }}/custom/*.ipk
+
+      - name: Show build logs on failure
+        if: failure()
+        run: |
+          find ./ -name "*.log" -print -exec cat {} \;
