@@ -24,6 +24,7 @@ jobs:
         uses: openwrt/gh-action-sdk@v5
         env:
           ARCH: ${{ matrix.arch }}
+          CONTAINER: openwrt/sdk:${{ matrix.arch }}-24.10.4  # Use stable version to avoid snapshot setup.sh issues
           FEEDNAME: custom
           PACKAGES: luci-app-customtunnel
           EXTRA_FEEDS: "custom | ${{ github.workspace }}/applications"
