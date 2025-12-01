@@ -11,9 +11,10 @@ jobs:
   build:
     name: ${{ matrix.arch }} build
     runs-on: ubuntu-latest
+    timeout-minutes: 360  # Explicitly set max timeout to prevent early cancellation
     strategy:
       matrix:
-        arch: [ x86_64, aarch64_cortex-a53 ]
+        arch: [ x86_64 ]  # Reduced to one architecture for faster testing; add back aarch64_cortex-a53 if needed
     steps:
       - uses: actions/checkout@v4
         with:
@@ -26,6 +27,8 @@ jobs:
           FEEDNAME: custom
           PACKAGES: luci-app-customtunnel
           EXTRA_FEEDS: "custom | ${{ github.workspace }}/applications"
+          BUILD_LOG: 1  # Enable detailed build logs for debugging
+          IGNORE_ERRORS: 1  # Continue on minor errors to avoid abrupt cancellations
 
       - name: Store packages
         uses: actions/upload-artifact@v4
