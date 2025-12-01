@@ -1,0 +1,12 @@
+
+{
+    "luci-app-customtunnel": {
+        "description": "Grant UCI access for luci-app-customtunnel",
+        "read": {
+            "uci": ["sshtunnel"]
+        },
+        "write": {
+            "uci": ["sshtunnel"]
+        }
+    }
+}

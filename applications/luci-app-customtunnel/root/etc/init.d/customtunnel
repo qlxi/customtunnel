@@ -1,0 +1,15 @@
+
+#!/bin/sh /etc/rc.common
+
+START=99
+
+start() {
+    /usr/bin/sshtunnel -config /etc/config/sshtunnel &
+    # Для payload: используйте corkscrew с auth file
+    echo "$payload" > /tmp/corkscrew-auth
+    ssh -o ProxyCommand="corkscrew $proxy_host $proxy_port %h %p /tmp/corkscrew-auth" user@host
+}
+
+stop() {
+    killall sshtunnel
+}
