@@ -32,7 +32,7 @@ jobs:
           FEEDNAME: custom
           PACKAGES: luci-app-customtunnel
 
-          EXTRA_FEEDS: "custom|${{ github.workspace }}/applications"
+          EXTRA_FEEDS: "src-link custom ${GITHUB_WORKSPACE}/applications"
 
           BUILD_LOG: 1
           IGNORE_ERRORS: 1
